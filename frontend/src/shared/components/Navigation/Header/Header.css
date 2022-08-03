@@ -1,0 +1,11 @@
+.header {
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  top: 0;
+  left: 0;
+  background: #69f2eb;
+  box-shadow: 0 0.2rem 0.5rem #110f0f;
+  padding: 0 1rem;
+  justify-content: space-between;
+}
