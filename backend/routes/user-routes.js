@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const userSchema = require('../models/user')
+const userController = require('../controllers/user-controllers');
 
-router.post('/user', (req, res) => {
-    userSchema.insertMany(req.body)
-    .then((data) => res.json(data))
-    .catch((err) => res.json({message: err}))
-})
+router.post('/login', userController.login)
+router.post('/user', userController.createUser)
+router.get('/users', userController.getUsers)
 
 module.exports = router;

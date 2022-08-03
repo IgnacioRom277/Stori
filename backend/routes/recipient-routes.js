@@ -1,11 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const recipientSchema = require('../models/recipient')
+const recipientController = require('../controllers/recipient-controller');
 
-router.post('/recipient', (req, res) => {
-    recipientSchema.insertMany(req.body)
-    .then((data) => res.json(data))
-    .catch((err) => res.json({message: err}))
-})
+router.post('/recipient', recipientController.createRecipient)
+router.post('/recipients', recipientController.createMultiRecipient)
 
 module.exports = router;

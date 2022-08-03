@@ -1,11 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const newsletterSchema = require('../models/newsletter');
+const newsletterController = require('../controllers/newsletter-controller');
 
-router.post('/newsletter', (req, res) => {
-    newsletterSchema.insertMany(req.body)
-    .then((data) => res.json(data))
-    .catch((err) => res.json({message: err}))
-})
+router.post('/newsletter', newsletterController.createNewsletter)
 
 module.exports = router;
