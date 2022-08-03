@@ -1,0 +1,30 @@
+.form-control {
+  margin: 0.5rem 0;
+}
+
+.form-control label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.form-control input {
+  width: -webkit-fill-available;
+  font: inherit;
+  border: 1px solid #ff9fdc6c;
+  background: #ff9fdc13;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.form-control input:focus {
+  outline: none;
+  border: 1px solid #ff47bc;
+  background: #ff9fdc13;
+}
+
+.form-control input,
+.form-control input::placeholder {
+  color: #007888;
+  display: block;
+}

@@ -10,7 +10,7 @@
 }
 
 .nav-links a {
-  color: #007888;
+  color: white;
   font-size: 1rem;
   font-weight: bold;
   padding: 1rem;
@@ -18,7 +18,7 @@
 }
 
 .nav-links a:hover {
-  background: #007888;
+  background: white;
   border-radius: 0.5rem;
-  color: white;
+  color: #007888;;
 }
