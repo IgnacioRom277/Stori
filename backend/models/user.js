@@ -22,6 +22,11 @@ const userSchema = Schema([{
         required: true,
         unique: true
     },
+    password: {
+        type: String,
+        required: true,
+        minlegth: 8
+    },
     isAdmin: {
         type: Boolean,
         required: true
