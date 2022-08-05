@@ -17,3 +17,12 @@
   border: 0.2rem solid #ff47bbcb;
   background: #ff47bbcb;
 }
+
+.button:disabled,
+.button:hover:disabled,
+.button:active:disabled {
+  background: #ccc;
+  color: #979797;
+  border-color: #ccc;
+  cursor: not-allowed;
+}

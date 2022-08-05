@@ -1,0 +1,9 @@
+.csv-input__wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.csv-input__button {
+  max-width: fit-content;
+}
