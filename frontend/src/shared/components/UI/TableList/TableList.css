@@ -1,0 +1,36 @@
+.table-list__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-list__table {
+  margin-top: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.table-list__table tr {
+  text-align: center;
+}
+
+thead, tr {
+  border: 1px solid #ff47bb28;
+  background: #ff9fdc13;
+}
+
+tbody {
+  display: block;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: clip;
+}
+
+thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table {
+  border-collapse: collapse;
+}

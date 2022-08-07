@@ -1,0 +1,10 @@
+.multirecipient-upload__table {
+  height: calc(100vh - 30rem);
+}
+
+.multirecipient-upload__form {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 5rem;
+  width: 100%;
+}
