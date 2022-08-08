@@ -8,9 +8,12 @@ const SendNewsletter = () => {
   const [recipients, setRecipients] = useState([]);
   const [recipientsToSend, setRecipientsToSend] = useState([]);
   const [isSending, setIsSending] = useState(false);
+  const [newsletterBody, setNewsletterBody] = useState({});
+
 
   const isMounted = useRef(true);
   const recipientsToMail = useRef([]);
+  const newsletterSelected = useRef([]);
 
   useEffect(() => {
     if (recipients.length <= 0) {
@@ -19,8 +22,10 @@ const SendNewsletter = () => {
     return () => {
       isMounted.current = false
       recipientsToMail.current = recipientsToSend
+      newsletterSelected.current = newsletterBody
+
     }
-  }, [recipientsToSend, recipients]);
+  }, [recipientsToSend, recipients, newsletterBody]);
 
   const getRecipientsHandler = async () => {
     await fetch('http://localhost:80/api/recipient-list')
@@ -77,6 +82,12 @@ const SendNewsletter = () => {
   };
 
   const sendEmailToRecipients = useCallback(async () => {
+
+    const bodyReq = {
+      recipients: recipientsToSend,
+      newsletter: newsletterBody
+    }
+
     if (isSending) return
     setIsSending(true)
 
@@ -87,20 +98,30 @@ const SendNewsletter = () => {
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ recipients: recipientsToSend })
+          body: JSON.stringify(bodyReq)
         })
+        if (mailResponse.status === 200) {
         setIsSending(false)
+        alert('Correos enviados correctamente')
+        }
       }
     } catch (err) {
       setIsSending(false)
     }
     if (isMounted.current)
       setIsSending(false)
-  }, [isSending, recipientsToSend])
+  }, [isSending, recipientsToSend, newsletterBody])
+
+  const selectCardHandler = ((event)=> {
+    setNewsletterBody({
+      filename: event.target.alt,
+      url: event.target.src
+    })
+  });
 
   return (
     <div>
-      <ShowNewsletter/>
+      <ShowNewsletter onClick={selectCardHandler}/>
       <div className="recipient__table">
         <h2>Selecciona algún destinatario para enviar el archivo seleccionado</h2>
         <DataTable
@@ -114,7 +135,7 @@ const SendNewsletter = () => {
         <div className="send-email__buttons">
           {
             recipientsToSend.length > 0 &&
-            <Button className="send-email__button" disabled={isSending} onClick={sendEmailToRecipients} >
+            <Button className="send-email__button" disabled={!newsletterBody || !recipientsToSend } onClick={sendEmailToRecipients} >
               Enviar Email
             </Button>
           }

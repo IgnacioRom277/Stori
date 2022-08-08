@@ -1,52 +1,69 @@
-import "./UploadFile.css";
-import '@react-pdf-viewer/core/lib/styles/index.css';
-import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import { useState } from "react";
-import { Worker, Viewer } from '@react-pdf-viewer/core';
-import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import React, { useEffect, useRef, useState } from "react";
+import Button from "../Button/Button";
 import {
   ref,
   uploadBytes
 } from "firebase/storage";
+import { Worker, Viewer } from '@react-pdf-viewer/core';
 import { storage } from "../../../utils/firebase/firebase";
-import { v4 } from "uuid";
-import Button from "../Button/Button";
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import "./UploadFile.css";
 
 const UploadFile = (props) => {
-  const defaultLayoutPluginInstance = defaultLayoutPlugin();
-  const allowedFiles = ['application/pdf', 'image/png'];
-
-  const [imageUpload, setImageUpload] = useState(null);
-  const [imageToRender, setImageToRender] = useState(null);
-  const [extension, setExtension] = useState('');
+  const [fileImported, setFileImported] = useState('');
+  const [previewFileImg, setPreviewFileImg] = useState('');
+  const [fileExtension, setFileExtension] = useState('');
   const [fileName, setFileName] = useState('');
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  let inputRef = useRef();
 
-  const setFileReaderToPreview = () => {
-    if (imageUpload && allowedFiles.includes(imageUpload.type)) {
-      const reader = new FileReader();
-      reader.readAsDataURL(imageUpload);
-      reader.onloadend = (event) => {
-        setImageToRender(event.target.result)
-      }
+  useEffect(() => {
+    const allowedFiles = ['application/pdf'];
+    if (!fileImported) {
+      return;
     }
-  }
 
-  const getNameAndExtensionFile = (...fileData) => {
-    const fullFileName = fileData[0].name.toLowerCase().split('.');
-    const fileNameFiltered = fullFileName.slice(0, fullFileName.length - 1)
-    const fileExtension = fullFileName[fullFileName.length - 1].toString();
-    setFileName(fileNameFiltered[0]);
-    setExtension(fileExtension);
-    setFileReaderToPreview();
-  }
+    if (fileImported.type === 'application/pdf') {
+      if (fileImported) {
+        if (fileImported && allowedFiles.includes(fileImported.type)) {
+          const reader = new FileReader();
+          reader.onloadend = (e) => {
+            setPreviewFileImg(e.target.result);
+          }
+          reader.readAsDataURL(fileImported);
+        }
+      } else {
+        setFileImported('')
+      }
+    } else {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        setPreviewFileImg(fileReader.result);
+      };
+      fileReader.readAsDataURL(fileImported);
+    }
+  }, [fileImported, fileExtension, fileName]);
 
-  const onUploadFile = () => {
-    if (imageUpload == null) return;
-    const imageRef = ref(storage, `newsletters/${fileName + v4()}`);
-    uploadBytes(imageRef, imageUpload).then((res) => {
-      console.log('res :>> ', res);
+  const onUploadFileHandler = () => {
+    if (fileImported == null) return;
+
+    const imageRef = ref(storage, `newsletters/${fileName}`);
+    uploadBytes(imageRef, fileImported).then((res) => {
+      // PENDIENTE ACTUALIZAR LA BD DE NEWSLETTER
+      alert('El archivo se subió correctamente');
     });
-  };
+  }
+
+  const onFileImportedHandler = (event) => {
+    const currentFile = event.target.files[0];
+    setFileImported(currentFile);
+    const completeName = currentFile.name.toLowerCase().split('.');
+    const fileExtension = completeName[completeName.length - 1].toString();
+    setFileName(currentFile.name);
+    setFileExtension(fileExtension);
+  }
 
   return (
     <div className="upload-file__wrapper">
@@ -54,40 +71,38 @@ const UploadFile = (props) => {
         <h2>{props.title}</h2>
         <p>Puedes cargar un archivo en formato .pdf o png.</p>
         <input
-          type={"file"}
-          id={"fileInput"}
+          ref={inputRef}
+          type="file"
+          id="fileInput"
           accept={".pdf, .png"}
-          onChange={(event) => {
-            setImageUpload(event.target.files[0]);
-            getNameAndExtensionFile(event.target.files[0])
-          }} />
+          onChange={onFileImportedHandler} />
 
-        <Button disabled={!imageUpload} onClick={onUploadFile}>
+        <img className="file_example" src="https://firebasestorage.googleapis.com/v0/b/stori-challenge-9a98c.appspot.com/o/Upload_newsletter.png?alt=media&token=0d900de0-27f3-470b-84e5-3340ae4f0b68" alt="PDF-PNG" />
+
+        <Button disabled={false} onClick={onUploadFileHandler}>
           Cargar newsletter
         </Button>
       </div>
 
       <div className='upload-file__preview'>
         <h2>Vista previa</h2>
-        {imageUpload && extension === 'png' &&
-          <img className="viewer" src={imageToRender} alt="Preview" />
+        {fileImported && fileExtension === 'png' &&
+          <img className="viewer" src={previewFileImg} alt="Preview" />
         }
 
-        {imageUpload && extension !== 'png' &&
+        {fileImported && fileExtension !== 'png' &&
           <div className="viewer">
-            {imageUpload && (
-              <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.15.349/build/pdf.worker.min.js">
-                <Viewer fileUrl={imageToRender}
-                  plugins={[defaultLayoutPluginInstance]}></Viewer>
-              </Worker>
-            )}
+            <Worker workerUrl="https://unpkg.com/pdfjs-dist@2.15.349/build/pdf.worker.min.js">
+              <Viewer fileUrl={previewFileImg}
+                plugins={[defaultLayoutPluginInstance]}></Viewer>
+            </Worker>
           </div>
         }
 
-        {!imageUpload && <div className="viewer">No se ha cargado ningún archivo</div>}
+        {!fileImported && <div className="viewer">No se ha cargado ningún archivo</div>}
       </div>
     </div>
   )
 }
 
-export default UploadFile;
+export default UploadFile
