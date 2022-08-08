@@ -20,5 +20,28 @@
 .nav-links a:hover {
   background: white;
   border-radius: 0.5rem;
-  color: #007888;;
+  color: #007888;
+}
+
+.nav-links button {
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0.5rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 1rem;
+  text-decoration: none;
+}
+
+.nav-links button:focus {
+  outline: none;
+}
+
+.nav-links button:hover,
+.nav-links button:active {
+  background: white;
+  border-radius: 0.5rem;
+  color: #007888;
 }

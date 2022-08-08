@@ -1,21 +1,43 @@
 import React, { useState } from "react";
 import Button from "../../../shared/components/FormElements/Button/Button";
 import UploadCsv from "../../../shared/components/FormElements/UploadFile/CSV/UploadCsv";
-import TableList from "../../../shared/components/UI/TableList/TableList";
+import DataTable from "react-data-table-component";
 import './MultiRecipient.css';
 
 const MultiRecipient = () => {
   const [rowData, setRowData] = useState([]);
 
   const csvUploadedHandler = (recipientsToSave) => {
+    console.log('recipientsToSave :>> ', recipientsToSave);
     setRowData(recipientsToSave);
   }
 
-  const onSubmitHandler = () => {
-    // TODO Register data
+  const onSubmitHandler = async () => {
+    try {
+      if (rowData) {
+        const bodyReq = JSON.stringify({ recipients: rowData });
+        const multiRecipientResponse = await fetch('http://localhost:80/api/recipients', {
+          method: 'POST',
+          body: bodyReq,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+        console.log('authResponse :>> ', multiRecipientResponse);
+      }
+    } catch (err) {
+      console.log('err :>> ', err);
+    }
   }
 
-  const headerKeys = Object.keys(Object.assign({}, ...rowData)).map(e => e.toLocaleUpperCase());
+  const headers = [
+    ['Nombre', 'name'], 
+    ['Apellido','lastName'], 
+    ['Correo electrónico', 'email']
+  ];
+  const headerKeys = headers.map((element) => {
+    return { name: element[0], selector: row => row[element[1]], soportable: true }
+  });
 
   return (
     <div className="multirecipient-upload__form">
@@ -25,18 +47,16 @@ const MultiRecipient = () => {
       {
         rowData.length !== 0 &&
         <React.Fragment>
-          <TableList
-            className="multirecipient-upload__table"
-            resume="Los siguientes usuarios serán registrados:"
-            rowKey="header"
-            headers={headerKeys}
+          <DataTable
+            columns={headerKeys}
             data={rowData}
+            defaultSortField="title"
+            pagination
           />
-          <form>
-            <Button type="submit" disabled={false} onClick={onSubmitHandler}>
-              {'Cargar'}
-            </Button>
-          </form>
+
+          <Button type="submit" disabled={false} onClick={onSubmitHandler}>
+            Cargar
+          </Button>
         </React.Fragment>
       }
     </div>
