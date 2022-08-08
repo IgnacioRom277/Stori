@@ -1,0 +1,9 @@
+.error-modal {
+  position: absolute;
+  width: 100%;
+}
+
+.error-modal__card {
+  width: fit-content;
+  box-shadow: 0rem 0rem 1rem #5e5c5c;
+}

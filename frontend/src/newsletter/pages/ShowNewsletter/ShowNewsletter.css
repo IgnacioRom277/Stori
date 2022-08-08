@@ -1,8 +1,15 @@
 .newsletter__wrapper {
   display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.newsletter_card__wrapper {
+  display: flex;
   flex-wrap: wrap;
   max-height: 90vh;
   overflow-y: auto;
+  justify-content: space-around;
 }
 
 .newsletter__card {
@@ -12,6 +19,7 @@
   justify-content: center;
   flex-direction: column;
   text-align: center;
+  cursor: pointer;
 }
 
 .newsletter__img {

@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Button from "../../../shared/components/FormElements/Button/Button";
 import DataTable from "react-data-table-component";
 import './SendNewsletter.css';
+import ShowNewsletter from "../ShowNewsletter/ShowNewsletter";
 
 const SendNewsletter = () => {
   const [recipients, setRecipients] = useState([]);
@@ -12,11 +13,14 @@ const SendNewsletter = () => {
   const recipientsToMail = useRef([]);
 
   useEffect(() => {
+    if (recipients.length <= 0) {
+      getRecipientsHandler();
+    }
     return () => {
       isMounted.current = false
       recipientsToMail.current = recipientsToSend
     }
-  }, [recipientsToSend]);
+  }, [recipientsToSend, recipients]);
 
   const getRecipientsHandler = async () => {
     await fetch('http://localhost:80/api/recipient-list')
@@ -88,7 +92,6 @@ const SendNewsletter = () => {
         setIsSending(false)
       }
     } catch (err) {
-      console.log('err :>> ', err);
       setIsSending(false)
     }
     if (isMounted.current)
@@ -96,28 +99,28 @@ const SendNewsletter = () => {
   }, [isSending, recipientsToSend])
 
   return (
-    <React.Fragment>
-      <DataTable
-        title="Destinatarios disponibles"
-        columns={headerKeys}
-        data={recipients}
-        defaultSortField="title"
-        pagination
-        onRowClicked={handleRowClicked}
-        conditionalRowStyles={conditionalRowStyles}
-      />
-      <div className="send-email__buttons">
-        <Button className="send-email__button" disabled={false} onClick={getRecipientsHandler} >
-          Cargar Destinatarios
-        </Button>
-        {
-          recipientsToSend.length > 0 &&
-          <Button className="send-email__button" disabled={isSending} onClick={sendEmailToRecipients} >
-            Enviar Email
-          </Button>
-        }
+    <div>
+      <ShowNewsletter/>
+      <div className="recipient__table">
+        <h2>Selecciona algún destinatario para enviar el archivo seleccionado</h2>
+        <DataTable
+          columns={headerKeys}
+          data={recipients}
+          defaultSortField="title"
+          pagination
+          onRowClicked={handleRowClicked}
+          conditionalRowStyles={conditionalRowStyles}
+        />
+        <div className="send-email__buttons">
+          {
+            recipientsToSend.length > 0 &&
+            <Button className="send-email__button" disabled={isSending} onClick={sendEmailToRecipients} >
+              Enviar Email
+            </Button>
+          }
+        </div>
       </div>
-    </React.Fragment>
+    </div>
   )
 }
 

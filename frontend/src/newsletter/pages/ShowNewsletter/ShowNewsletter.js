@@ -12,7 +12,7 @@ import Card from "../../../shared/components/UI/Card/Card";
 function ShowNewsletter() {
   const [imageUrls, setImageUrls] = useState([]);
   const [imageNames, setImageNames] = useState([]);
-  const imagesListRef = ref(storage, "images/");
+  const imagesListRef = ref(storage, "newsletters/");
 
   useEffect(() => {
     listAll(imagesListRef).then((response) => {
@@ -36,8 +36,6 @@ function ShowNewsletter() {
             }
           })
         })
-
-
       });
     });
   }, []);
@@ -50,18 +48,21 @@ function ShowNewsletter() {
   return (
     <React.Fragment>
       <div className="newsletter__wrapper">
-        {
-          imageUrls.map((url, index) => {
-            return (
-              <div key={`wrapper_${index}`} onClick={onSelectCard}>
-                <Card key={`card_${index}`} className="newsletter__card">
-                  <img className="newsletter__img" key={`img_${index}`} src={url} alt={`${imageNames[index]}`} />
-                  <p key={`name_${index}`}> {imageNames[index]} </p>
-                </Card>
-              </div>
-            )
-          })
-        }
+        <h2>Newsletters disponibles:</h2>
+        <div className="newsletter_card__wrapper">
+          {
+            imageUrls.map((url, index) => {
+              return (
+                <div key={`wrapper_${index}`} onClick={onSelectCard}>
+                  <Card key={`card_${index}`} className="newsletter__card">
+                    <img className="newsletter__img" key={`img_${index}`} src={url} alt={`${imageNames[index]}`} />
+                    <p key={`name_${index}`}> {imageNames[index]} </p>
+                  </Card>
+                </div>
+              )
+            })
+          }
+        </div>
       </div>
     </React.Fragment>
   );

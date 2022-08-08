@@ -6,11 +6,12 @@ import './Auth.css';
 import { useForm } from '../../../shared/hooks/form-hook';
 import { AuthContext } from '../../../shared/context/auth-context';
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../../shared/utils/validators";
+import Error from "../../../shared/components/UI/Modal/Error/Error";
 
 const Auth = () => {
   const auth = useContext(AuthContext);
-  const authContext = useContext(AuthContext);
   const [isLogin, setIsLogin] = useState(true);
+  const [loginError, setLoginError] = useState(false);
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -45,118 +46,135 @@ const Auth = () => {
           'Content-Type': 'application/json'
         }
       })
-      auth.login(authResponse.id);
-      console.log('authResponse :>> ', authResponse);
-    } catch (err) {
-      console.log('LOGIN user failed, try again :>> ', err);
+      if (authResponse) {
+        auth.login(authResponse._id);
+        setLoginError(false);
+      } else {
+        setLoginError(true);
+      }
+    } catch {
+      setLoginError(true);
     }
   }
 
   const createUserRequest = async () => {
     try {
-      const formData = new FormData();
-      formData.append('name', formState.inputs.name.value);
-      formData.append('lastName', formState.inputs.lastName.value);
-      formData.append('username', formState.inputs.username.value);
-      formData.append('email', formState.inputs.email.value);
-      formData.append('password', formState.inputs.password.value);
+      const bodyReq = {
+        name: formState.inputs.name.value,
+        lastName: formState.inputs.lastName.value,
+        username: formState.inputs.username.value,
+        email: formState.inputs.email.value,
+        password: formState.inputs.password.value,
+        isAdmin: true
+      }
 
-      const createUserResponse = await fetch('http://localhost:80/api/user', {
+      const createUserRes = await fetch('http://localhost:80/api/user', {
         method: 'POST',
-        body: formData,
+        body: JSON.stringify(bodyReq),
         headers: {
           'Content-Type': 'application/json'
         }
       })
+      if (createUserRes) {
+        auth.login(createUserRes._id);
+        setLoginError(false);
+      } else {
+        setLoginError(true);
+      }
+    } catch {
+      setLoginError(true);
+    }      
+  }
 
-      authContext.login(createUserResponse._id);
-    } catch (err) {
-      console.log('CREATE user failed, try again :>> ', err);
+const authHandler = async (event) => {
+  event.preventDefault();
+  isLogin ? LoginRequest() : createUserRequest();
+}
+
+const onConfirmError = () => {
+  setLoginError(false)
+}
+
+return (
+  <div className="auth_wrapper">
+    {loginError &&
+      <Error title='Ocurrió un error, verifique su información' buttonText="Confirmar" onClick={onConfirmError}></Error>
     }
-  }
 
-  const authHandler = async (event) => {
-    event.preventDefault();
-    isLogin ? LoginRequest() : createUserRequest();
-  }
-
-  return (
-    // TODO Implement validators at form
-    <React.Fragment>
-      <Card className='login'>
-        <h2> {isLogin ? 'Iniciar Sesión' : 'Crear Usuario'}</h2>
-        <form className="login__form" onSubmit={authHandler}>
-          {!isLogin && (
-            <Input
-              id="username"
-              type="text"
-              label="Nombre de Usuario"
-              validators={[VALIDATOR_REQUIRE()]}
-              placeholder="Ej. Nicolas21"
-              onInput={inputHandler}
-            />
-          )}
-          {!isLogin && (
-            <Input
-              id="name"
-              type="text"
-              label="Nombre"
-              validators={[VALIDATOR_REQUIRE()]}
-              placeholder="Ej. Nicolas"
-              onInput={inputHandler}
-            />
-          )}
-          {!isLogin && (
-            <Input
-              id="lastName"
-              type="text"
-              label="Apellido"
-              validators={[VALIDATOR_REQUIRE()]}
-              placeholder="Ej. Cruz"
-              onInput={inputHandler}
-            />
-          )}
+    <Card className='login'>
+      <h2> {isLogin ? 'Iniciar Sesión' : 'Crear Usuario'}</h2>
+      <form className="login__form" onSubmit={authHandler}>
+        {!isLogin && (
           <Input
-            id="email"
-            type="email"
-            label="Correo eletrónico"
-            validators={[VALIDATOR_EMAIL()]}
-            placeholder="usuario@dominio.com"
+            id="username"
+            type="text"
+            label="Nombre de Usuario"
+            validators={[VALIDATOR_REQUIRE()]}
+            placeholder="Ej. Nicolas21"
             onInput={inputHandler}
           />
+        )}
+        {!isLogin && (
           <Input
-            id="password"
-            type="password"
-            label="Contraseña"
-            placeholder="********"
-            validators={[VALIDATOR_MINLENGTH(8)]}
-            errorText="Ingresa una contraseña válida"
+            id="name"
+            type="text"
+            label="Nombre"
+            validators={[VALIDATOR_REQUIRE()]}
+            placeholder="Ej. Nicolas"
             onInput={inputHandler}
           />
-          {isLogin && (
-            <div>
-              <Button type="submit" disabled={!formState.isValid}>
-                {'Iniciar Sesión'}
-              </Button>
-              <Button onClick={loginOrSignHandler}>
-                ¿No tienes cuenta? Registrate
-              </Button>
-            </div>
-          )}
-          {!isLogin && (
-            <div>
-              <Button type="submit" disabled={!formState.isValid}>
-                Registrar
-              </Button>
-              <Button onClick={loginOrSignHandler}>
-                Regresar
-              </Button>
-            </div>
-          )}
-        </form>
-      </Card>
-    </React.Fragment >
-  )
+        )}
+        {!isLogin && (
+          <Input
+            id="lastName"
+            type="text"
+            label="Apellido"
+            validators={[VALIDATOR_REQUIRE()]}
+            placeholder="Ej. Cruz"
+            onInput={inputHandler}
+          />
+        )}
+        <Input
+          id="email"
+          type="email"
+          label="Correo eletrónico"
+          validators={[VALIDATOR_EMAIL()]}
+          placeholder="usuario@dominio.com"
+          onInput={inputHandler}
+        />
+        <Input
+          id="password"
+          type="password"
+          label="Contraseña"
+          placeholder="********"
+          validators={[VALIDATOR_MINLENGTH(8)]}
+          errorText="Ingresa una contraseña válida"
+          onInput={inputHandler}
+        />
+        {isLogin && (
+          <div>
+            <Button type="submit" disabled={!formState.isValid}>
+              {'Iniciar Sesión'}
+            </Button>
+            <Button onClick={loginOrSignHandler}>
+              ¿No tienes cuenta? Registrate
+            </Button>
+          </div>
+        )}
+        {!isLogin && (
+          <div>
+            <Button type="submit" disabled={!formState.isValid} onClick={createUserRequest}>
+              Registrar
+            </Button>
+            <Button onClick={loginOrSignHandler}>
+              Regresar
+            </Button>
+          </div>
+        )}
+      </form>
+    </Card>
+  </div >
+)
 }
 
 export default Auth;
