@@ -7,4 +7,12 @@
   flex-direction: column;
   margin: 1rem 5rem;
   width: 100%;
+  text-align: center;
+}
+
+.multirecipient-error__dialog {
+  position: absolute;
+  top: 40vh;
+  left: 80vh;
+  z-index: 1;
 }

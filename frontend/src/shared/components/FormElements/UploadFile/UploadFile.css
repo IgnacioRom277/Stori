@@ -34,3 +34,8 @@ form{
 span{
   margin-top: 3px;
 }
+
+.file_example {
+  width: 75%;
+  height: auto;
+}

@@ -1,7 +1,16 @@
 .csv-input__wrapper {
   display: flex;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.csv-input-file__wrapper {
+  display: flex;
+  align-items: center;
   justify-content: space-between;
+  margin: 1rem 0;
+  width: 80%;
 }
 
 .csv-input__button {

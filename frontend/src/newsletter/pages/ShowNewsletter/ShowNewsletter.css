@@ -1,0 +1,33 @@
+.newsletter__wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.newsletter_card__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 90vh;
+  overflow-y: auto;
+  justify-content: space-around;
+}
+
+.newsletter__card {
+  width: 10rem;
+  margin: 1rem auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.newsletter__img {
+  width: auto;
+  height: 10rem;
+}
+
+.main {
+  width: 10rem;
+}

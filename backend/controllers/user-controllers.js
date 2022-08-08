@@ -18,7 +18,7 @@ const login = async (req, res, next) => {
 		return next(httpError)
 	}
 
-	res.json({ message: "Login Succesful" })
+	res.json(userFound)
 }
 
 const getUsers = async (req, res, next) => {

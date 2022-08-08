@@ -1,0 +1,13 @@
+.send-email__buttons {
+  display: flex;
+}
+
+.send-email__button {
+  margin: 2rem;
+}
+
+.recipient__table {
+  width: 80%;
+  margin: auto;
+  text-align: center;
+}

@@ -39,21 +39,28 @@ const UploadCsv = (props) => {
 
   return (
     <div className="csv-input__wrapper">
-      <form >
-        <input
-          type={"file"}
-          id={"csvFileInput"}
-          accept={".csv"}
-          onChange={onChangeHandler} />
-      </form>
+      { !file &&
+      <div>
+        <img alt="csv_example" src="https://firebasestorage.googleapis.com/v0/b/stori-challenge-9a98c.appspot.com/o/CsvExample.PNG?alt=media&token=628f9a01-c3fb-45bc-8b29-3451023ddaea" />
+      </div>
+      }
+      <div className="csv-input-file__wrapper">
+        <form >
+          <input
+            type={"file"}
+            id={"csvFileInput"}
+            accept={".csv"}
+            onChange={onChangeHandler} />
+        </form>
 
-      <Button
-        className="csv-input__button"
-        type="submit"
-        disabled={!file}
-        onClick={onSubmitHandler}>
-        Procesar archivo
-      </Button>
+        <Button
+          className="csv-input__button"
+          type="submit"
+          disabled={!file}
+          onClick={onSubmitHandler}>
+          Procesar archivo
+        </Button>
+      </div>
     </div>
   )
 }
