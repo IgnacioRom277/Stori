@@ -46,7 +46,8 @@ const Auth = () => {
           'Content-Type': 'application/json'
         }
       })
-      if (authResponse) {
+      console.log('authResponse :>> ', authResponse);
+      if (authResponse.status === 200) {
         auth.login(authResponse._id);
         setLoginError(false);
       } else {
@@ -75,7 +76,7 @@ const Auth = () => {
           'Content-Type': 'application/json'
         }
       })
-      if (createUserRes) {
+      if (createUserRes.status === 200) {
         auth.login(createUserRes._id);
         setLoginError(false);
       } else {
