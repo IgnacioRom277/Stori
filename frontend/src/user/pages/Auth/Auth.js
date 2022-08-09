@@ -7,6 +7,7 @@ import { useForm } from '../../../shared/hooks/form-hook';
 import { AuthContext } from '../../../shared/context/auth-context';
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from "../../../shared/utils/validators";
 import Error from "../../../shared/components/UI/Modal/Error/Error";
+import { Navigate } from "react-router-dom";
 
 const Auth = () => {
   const auth = useContext(AuthContext);
@@ -78,6 +79,7 @@ const Auth = () => {
       })
       if (createUserRes.status === 200) {
         auth.login(createUserRes._id);
+        <Navigate to='/newsletter'></Navigate>
         setLoginError(false);
       } else {
         setLoginError(true);
