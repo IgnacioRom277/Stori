@@ -28,7 +28,7 @@ $ npm install
 
 You could use the env file send at email
 
-# Run backend
+# Run Backend
 
 After install all dependencies, execute in backend route:
 ```bash
@@ -37,7 +37,7 @@ $ npm start
 
 ```
 
-# Run Backend
+# Run Frontend
 
 Once backend is up, execute in frontend route:
 ```bash
