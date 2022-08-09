@@ -51,7 +51,6 @@ const UploadFile = (props) => {
 
     const imageRef = ref(storage, `newsletters/${fileName}`);
     uploadBytes(imageRef, fileImported).then((res) => {
-      // PENDIENTE ACTUALIZAR LA BD DE NEWSLETTER
       alert('El archivo se subió correctamente');
     });
   }

@@ -1,0 +1,7 @@
+.viewer {
+  background-color: #e4e4e4;
+  overflow-y: auto;
+  width: 50vw;
+  height: 90vh;
+  margin: auto;
+}
