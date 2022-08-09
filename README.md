@@ -37,7 +37,7 @@ $ npm start
 
 ```
 
-# Run Backend
+# Run Frontend
 
 Once backend is up, execute in frontend route:
 ```bash
